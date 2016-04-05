@@ -89,27 +89,72 @@ func sieveOfEratosthenes(highest: Int) -> [Bool] {
 // This function is easy to create using previous one, and returns the result in a more user-friendly form.
 // You just need to return an ascending list of primes using the result from sieveOfEratosthenes
 func primes(highest: Int) -> [Int] {
-    return []
+    let list = sieveOfEratosthenes(highest)
+    var newList = [Bool]()
+    var primeNumberList = [Int]()
+    var counter = 0
+    
+    for i in list {
+        if i == true {
+            newList.append(i)
+            primeNumberList.append(counter)
+            counter += 1
+        }
+        else {counter += 1}
+    }
+    return primeNumberList
 }
 
 // Given a list of candidate factors, this should return the first factor of h. If none of the candidate factors are factors of h, then return nil.
 func factor(h: Int, candidates: [Int]) -> Int? {
-    return nil
+    var match: Int? = nil
+    for i in candidates {
+        if h % i != 0 {
+            match = nil
+        }
+        else {
+            match = i
+            break
+        }
+    }
+
+    return match
 }
 
 // Given a list of candidate factors, this should return all the factors of g. You just repeatedly call the previous function, and if you get a factor, you append it to the list and divide g by that factor. Repeat until there are no more factors.
-func factors(g: Int, candidates: [Int]) -> [Int] {
-    return []
+func factors(var g: Int, candidates: [Int]) -> [Int] {
+    
+    //holder for factor value to divide g neatly
+    var f = 1
+    
+    var list = [Int]()
+    let candidateList = candidates
+    
+    while factor(g, candidates: candidateList) != nil {
+        f = factor(g, candidates: candidateList)!
+        list.append(f)
+        g = g/f
+    }
+
+    return list
 }
 
 // This function should first generate a list of primes that are candidates to divide g. HINT: the largest prime that could possibly divide g is less than or equal to the square root of g. Once you have the list of candidates, just call the previous function.
 func factors(g: Int) -> [Int] {
-    return []
+    let sqrtG: Double = sqrt(Double(g))
+    let primesList = primes(Int(sqrtG))
+    return factors(g, candidates: primesList)
 }
 
 // This function returns all coprimes of a given integer f that are smaller than f. Basically, you need to first factor f. Then you need to look at all the numbers in the range 2..<f. For each of those numbers, test whether any of the factors of f divides the number.
 func coprimes(f: Int) -> [Int] {
-    return []
+    
+    var list = [Int]()
+    for i in 2..<f {
+        list.append(i)
+    }
+    
+    return factors(f, candidates: list)
 }
 
 protocol Crypto {
